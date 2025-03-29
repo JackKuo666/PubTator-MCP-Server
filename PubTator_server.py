@@ -3,6 +3,7 @@ import asyncio
 import logging
 import os
 import signal
+import sys
 from mcp.server.fastmcp import FastMCP
 from PubTator_search import PubTator3API
 
@@ -119,30 +120,18 @@ class PubTatorMCPServer:
 
     async def run(self):
         transport = os.environ.get("MCP_TRANSPORT", "tcp")
-        host = os.environ.get("MCP_HOST", "0.0.0.0")
-        port = int(os.environ.get("MCP_PORT", "8080"))
-        if transport == "tcp":
-            logging.info(f"Using TCP transport on {host}:{port}")
-            await self.mcp.run(transport=transport, host=host, port=port)
-        else:
-            logging.info("Using stdio transport")
-            await self.mcp.run(transport="stdio")
+        logging.info(f"Using {transport} transport")
+        await self.mcp.run()
 
 def main():
     logging.info("Starting PubTator MCP server")
     server = PubTatorMCPServer()
 
     loop = asyncio.get_event_loop()
-
-    def signal_handler():
-        logging.info("Shutting down PubTator MCP server")
-        loop.stop()
-
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, signal_handler)
-
     try:
         loop.run_until_complete(server.run())
+    except KeyboardInterrupt:
+        logging.info("Shutting down PubTator MCP server")
     except Exception as e:
         logging.error(f"Error running PubTator MCP server: {str(e)}")
     finally:
