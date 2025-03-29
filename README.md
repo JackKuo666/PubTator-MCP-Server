@@ -66,25 +66,43 @@ npx -y @smithery/cli@latest install @JackKuo666/pubtator-mcp-server --client cli
 
 ## 📊 Usage
 
+### Running the Server Directly
+
 Start the MCP server:
 
 ```bash
 python PubTator_server.py
 ```
 
-The server now supports both stdio and TCP transports. By default, it uses stdio. To use TCP transport, set the following environment variables:
+The server now supports both stdio and TCP transports. By default, it uses TCP transport. You can configure the following environment variables:
 
-- `MCP_TRANSPORT`: Set to "tcp" to use TCP transport (default is "stdio")
+- `MCP_TRANSPORT`: Set to "tcp" for TCP transport or "stdio" for stdio transport (default is "tcp")
 - `MCP_HOST`: The host to bind to (default is "0.0.0.0")
 - `MCP_PORT`: The port to listen on (default is 8080)
 
-Example of starting the server with TCP transport:
+Example of starting the server with custom settings:
 
 ```bash
 MCP_TRANSPORT=tcp MCP_HOST=127.0.0.1 MCP_PORT=8888 python PubTator_server.py
 ```
 
-The server now implements lazy initialization and proper error handling. It will gracefully handle shutdown signals (SIGINT and SIGTERM) and log any errors that occur during startup or operation.
+The server implements lazy initialization and proper error handling. It will gracefully handle shutdown signals (SIGINT and SIGTERM) and log any errors that occur during startup or operation.
+
+### Using Docker
+
+We provide a Dockerfile for easy deployment. To use the Docker container:
+
+1. Build the Docker image:
+   ```bash
+   docker build -t pubtator-mcp-server .
+   ```
+
+2. Run the Docker container:
+   ```bash
+   docker run -p 8080:8080 pubtator-mcp-server
+   ```
+
+This will start the PubTator MCP server inside a Docker container, exposing it on port 8080.
 
 ### Troubleshooting
 
@@ -92,7 +110,7 @@ If you encounter any issues starting the server:
 
 1. Check the console output for error messages.
 2. Ensure all required dependencies are installed (see Requirements section).
-3. Verify that the environment variables are set correctly if using TCP transport.
+3. Verify that the environment variables are set correctly.
 4. If the server fails to start, try running it with increased verbosity:
 
 ```bash
@@ -100,6 +118,12 @@ python -v PubTator_server.py
 ```
 
 This will provide more detailed logging information to help identify the source of any issues.
+
+When using Docker, you can check the logs with:
+
+```bash
+docker logs <container_id>
+```
 
 ### Configuration
 

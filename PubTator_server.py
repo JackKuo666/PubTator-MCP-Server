@@ -118,10 +118,10 @@ class PubTatorMCPServer:
                 return {"error": f"Failed to batch export: {str(e)}"}
 
     async def run(self):
-        transport = os.environ.get("MCP_TRANSPORT", "stdio")
+        transport = os.environ.get("MCP_TRANSPORT", "tcp")
+        host = os.environ.get("MCP_HOST", "0.0.0.0")
+        port = int(os.environ.get("MCP_PORT", "8080"))
         if transport == "tcp":
-            host = os.environ.get("MCP_HOST", "0.0.0.0")
-            port = int(os.environ.get("MCP_PORT", "8080"))
             logging.info(f"Using TCP transport on {host}:{port}")
             await self.mcp.run(transport=transport, host=host, port=port)
         else:
