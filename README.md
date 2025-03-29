@@ -84,6 +84,23 @@ Example of starting the server with TCP transport:
 MCP_TRANSPORT=tcp MCP_HOST=127.0.0.1 MCP_PORT=8888 python PubTator_server.py
 ```
 
+The server now implements lazy initialization and proper error handling. It will gracefully handle shutdown signals (SIGINT and SIGTERM) and log any errors that occur during startup or operation.
+
+### Troubleshooting
+
+If you encounter any issues starting the server:
+
+1. Check the console output for error messages.
+2. Ensure all required dependencies are installed (see Requirements section).
+3. Verify that the environment variables are set correctly if using TCP transport.
+4. If the server fails to start, try running it with increased verbosity:
+
+```bash
+python -v PubTator_server.py
+```
+
+This will provide more detailed logging information to help identify the source of any issues.
+
 ### Configuration
 
 #### Claude Desktop Configuration
