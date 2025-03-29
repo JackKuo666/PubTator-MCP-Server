@@ -126,7 +126,8 @@ class PubTator3API:
         self,
         entity_id: str,
         relation_type: Optional[str] = None,
-        target_entity_type: Optional[str] = None
+        target_entity_type: Optional[str] = None,
+        max_results: Optional[int] = None
     ) -> Dict:
         """
         查找相关实体
@@ -137,6 +138,7 @@ class PubTator3API:
                           (如"treat", "cause", "interact", "associate")
             target_entity_type: 可选，指定目标实体类型
                                (如"gene", "disease", "chemical")
+            max_results: 可选，限制返回结果的最大数量
         
         返回:
             相关实体结果的JSON字典
@@ -160,6 +162,8 @@ class PubTator3API:
             if target_entity_type not in ["gene", "disease", "chemical", "variant"]:
                 raise ValueError("Invalid target entity type")
             params["e2"] = target_entity_type
+        if max_results:
+            params["limit"] = max_results
         
         response = self._rate_limited_request("GET", url, params=params)
         response.raise_for_status()

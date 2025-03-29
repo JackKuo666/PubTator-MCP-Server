@@ -11,7 +11,7 @@ api = PubTator3API(max_retries=3, timeout=30)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Initialize FastMCP server
-mcp = FastMCP("pubmed")
+mcp = FastMCP("PubTator")
 
 
 
@@ -78,7 +78,8 @@ async def find_entity_id(
 async def find_related_entities(
     entity_id: str,
     relation_type: Optional[str] = None,
-    target_entity_type: Optional[str] = None
+    target_entity_type: Optional[str] = None,
+    max_results: Optional[int] = None
 ) -> Dict:
     """
     Find entities related to a given entity ID.
@@ -87,17 +88,19 @@ async def find_related_entities(
         entity_id: Entity ID to find relations for
         relation_type: Optional relation type ("treat", "cause", "interact", etc.)
         target_entity_type: Optional target entity type ("gene", "disease", "chemical")
+        max_results: Optional maximum number of results to return
 
     Returns:
         Dictionary containing related entities and their relationships
     """
-    logging.info(f"Finding related entities for: {entity_id}, relation: {relation_type}, target: {target_entity_type}")
+    logging.info(f"Finding related entities for: {entity_id}, relation: {relation_type}, target: {target_entity_type}, max_results: {max_results}")
     try:
         result = await asyncio.to_thread(
             api.find_related_entities,
             entity_id,
             relation_type,
-            target_entity_type
+            target_entity_type,
+            max_results
         )
         return result
     except Exception as e:
@@ -166,6 +169,6 @@ async def batch_export_from_search(
         return [{"error": f"Failed to batch export: {str(e)}"}]
 
 if __name__ == "__main__":
-    logging.info("Starting PubMed MCP server")
+    logging.info("Starting PubTator MCP server")
     # Initialize and run the server
     asyncio.run(mcp.run(transport='stdio'))
