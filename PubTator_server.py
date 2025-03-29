@@ -126,8 +126,13 @@ async def search_pubtator(
     logging.info(f"Searching PubTator with query: {query}, max_pages: {max_pages}")
     try:
         results = []
-        async for page_result in api.search(query, max_pages=max_pages, batch_size=batch_size):
-            results.append(page_result)
+        search_generator = api.search(query, max_pages=max_pages, batch_size=batch_size)
+        for page_result in asyncio.as_completed([asyncio.to_thread(lambda: next(search_generator))]):
+            results.append(await page_result)
+            if len(results) == max_pages:
+                break
+        return results
+    except StopIteration:
         return results
     except Exception as e:
         return [{"error": f"Failed to search PubTator: {str(e)}"}]
@@ -139,7 +144,7 @@ async def batch_export_from_search(
     max_pages: Optional[int] = 3,
     full_text: bool = False,
     batch_size: int = 100
-) -> List[Union[Dict, str]]:
+) -> Union[Dict, str]:
     """
     Search and batch export publications from PubTator.
 
@@ -151,22 +156,23 @@ async def batch_export_from_search(
         batch_size: Number of PMIDs per batch
 
     Returns:
-        List of exported publication batches
+        Exported publication batch
     """
     logging.info(f"Batch exporting from search query: {query}, format: {format}")
     try:
-        results = []
-        async for result in api.batch_export_from_search(
+        export_generator = api.batch_export_from_search(
             query,
             format,
             max_pages,
             full_text,
             batch_size
-        ):
-            results.append(result)
-        return results
+        )
+        result = await asyncio.to_thread(next, export_generator)
+        return result
+    except StopIteration:
+        return {"message": "No results found"}
     except Exception as e:
-        return [{"error": f"Failed to batch export: {str(e)}"}]
+        return {"error": f"Failed to batch export: {str(e)}"}
 
 if __name__ == "__main__":
     logging.info("Starting PubTator MCP server")

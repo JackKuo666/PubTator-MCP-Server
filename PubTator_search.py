@@ -260,7 +260,7 @@ class PubTator3API:
         返回:
             PMID列表
         """
-        return [result["pmid"] for result in results.get("results", []) if "pmid" in result]
+        return [str(result["pmid"]) for result in results.get("results", []) if "pmid" in result]
     
     def batch_export_from_search(
         self,
@@ -292,6 +292,8 @@ class PubTator3API:
                 while len(all_pmids) >= batch_size:
                     batch = all_pmids[:batch_size]
                     try:
+                        # 确保所有PMID都是字符串类型
+                        batch = [str(pmid) for pmid in batch]
                         result = self.export_publications(
                             batch,
                             "pmid",
@@ -312,6 +314,8 @@ class PubTator3API:
             # 处理剩余的PMID
             if all_pmids:
                 try:
+                    # 确保所有剩余的PMID都是字符串类型
+                    all_pmids = [str(pmid) for pmid in all_pmids]
                     result = self.export_publications(
                         all_pmids,
                         "pmid",
