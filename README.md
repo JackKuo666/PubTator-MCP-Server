@@ -1,5 +1,6 @@
 # PubTator MCP Server
 [![smithery badge](https://smithery.ai/badge/@JackKuo666/pubmed-mcp-server)](https://smithery.ai/server/@JackKuo666/pubmed-mcp-server)
+
 🔍 A biomedical literature annotation and relationship mining server based on PubTator3, providing convenient access through the MCP interface.
 
 PubTator MCP Server provides AI assistants with access to the PubTator3 biomedical literature annotation system through the Model Context Protocol (MCP). It allows AI models to programmatically search scientific literature, obtain annotation information, and analyze entity relationships.
