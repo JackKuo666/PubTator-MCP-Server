@@ -72,6 +72,18 @@ Start the MCP server:
 python PubTator_server.py
 ```
 
+The server now supports both stdio and TCP transports. By default, it uses stdio. To use TCP transport, set the following environment variables:
+
+- `MCP_TRANSPORT`: Set to "tcp" to use TCP transport (default is "stdio")
+- `MCP_HOST`: The host to bind to (default is "0.0.0.0")
+- `MCP_PORT`: The port to listen on (default is 8080)
+
+Example of starting the server with TCP transport:
+
+```bash
+MCP_TRANSPORT=tcp MCP_HOST=127.0.0.1 MCP_PORT=8888 python PubTator_server.py
+```
+
 ### Configuration
 
 #### Claude Desktop Configuration
@@ -119,7 +131,32 @@ Add to `claude_desktop_config.json`:
         "-c",
         "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/PubTator_server.py"
       ],
-      "env": {},
+      "env": {
+        "MCP_TRANSPORT": "stdio"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+To use TCP transport, modify the configuration as follows:
+
+```json
+{
+  "mcpServers": {
+    "pubtator": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/PubTator_server.py"
+      ],
+      "env": {
+        "MCP_TRANSPORT": "tcp",
+        "MCP_HOST": "127.0.0.1",
+        "MCP_PORT": "8888"
+      },
       "disabled": false,
       "autoApprove": []
     }
