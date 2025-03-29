@@ -168,4 +168,4 @@ async def batch_export_from_search(
 if __name__ == "__main__":
     logging.info("Starting PubMed MCP server")
     # Initialize and run the server
-    mcp.run(transport='stdio')
+    asyncio.run(mcp.run(transport='stdio'))
