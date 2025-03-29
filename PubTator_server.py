@@ -1,6 +1,7 @@
 from typing import Any, List, Dict, Optional, Union
 import asyncio
 import logging
+import os
 from mcp.server.fastmcp import FastMCP
 from PubTator_search import PubTator3API
 
@@ -174,7 +175,17 @@ async def batch_export_from_search(
     except Exception as e:
         return {"error": f"Failed to batch export: {str(e)}"}
 
+def get_transport():
+    return os.environ.get("MCP_TRANSPORT", "stdio").lower()
+
 if __name__ == "__main__":
     logging.info("Starting PubTator MCP server")
-    # Initialize and run the server
-    asyncio.run(mcp.run(transport='stdio'))
+    transport = get_transport()
+    if transport == "tcp":
+        host = os.environ.get("MCP_HOST", "0.0.0.0")
+        port = int(os.environ.get("MCP_PORT", "8080"))
+        logging.info(f"Using TCP transport on {host}:{port}")
+        asyncio.run(mcp.run(transport=transport, host=host, port=port))
+    else:
+        logging.info("Using stdio transport")
+        asyncio.run(mcp.run(transport=transport))
