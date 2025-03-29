@@ -1,6 +1,3 @@
 requests
 bs4
 mcp
-asyncio
-typing
-logging
