@@ -14,8 +14,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Initialize FastMCP server
 mcp = FastMCP("PubTator")
 
-
-
 @mcp.tool()
 async def export_pubtator_annotations(
     pmids: List[str],
@@ -175,10 +173,14 @@ async def batch_export_from_search(
     except Exception as e:
         return {"error": f"Failed to batch export: {str(e)}"}
 
-def get_transport():
-    return os.environ.get("MCP_TRANSPORT", "stdio").lower()
-
 if __name__ == "__main__":
     logging.info("Starting PubTator MCP server")
-# Initialize and run the server
-    mcp.run(transport='stdio')
+    transport = os.environ.get("MCP_TRANSPORT", "stdio")
+    if transport == "tcp":
+        host = os.environ.get("MCP_HOST", "0.0.0.0")
+        port = int(os.environ.get("MCP_PORT", "8080"))
+        logging.info(f"Using TCP transport on {host}:{port}")
+        mcp.run(transport=transport, host=host, port=port)
+    else:
+        logging.info("Using stdio transport")
+        mcp.run(transport="stdio")
