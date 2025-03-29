@@ -1,6 +1,6 @@
-requests>=2.31.0
-bs4>=4.12.2
-mcp>=0.1.0
-asyncio>=3.4.3
-typing>=3.7.4
-logging>=0.5.1.2
+requests
+bs4
+mcp
+asyncio
+typing
+logging
