@@ -1,5 +1,5 @@
 # PubTator MCP Server
-[![smithery badge](https://smithery.ai/badge/@JackKuo666/pubmed-mcp-server)](https://smithery.ai/server/@JackKuo666/pubmed-mcp-server)
+[![smithery badge](https://smithery.ai/badge/@JackKuo666/pubtator-mcp-server)](https://smithery.ai/server/@JackKuo666/pubtator-mcp-server)
 
 🔍 A biomedical literature annotation and relationship mining server based on PubTator3, providing convenient access through the MCP interface.
 
@@ -25,12 +25,12 @@ PubTator MCP Server provides AI assistants with access to the PubTator3 biomedic
 
 #### Via Smithery
 
-Use [Smithery](https://smithery.ai/server/@JackKuo666/pubmed-mcp-server) to automatically install PubTator Server:
+Use [Smithery](https://smithery.ai/server/@JackKuo666/pubtator-mcp-server) to automatically install PubTator Server:
 
 ##### Claude
 
 ```sh
-npx -y @smithery/cli@latest install @JackKuo666/pubmed-mcp-server --client claude --config "{}"
+npx -y @smithery/cli@latest install @JackKuo666/pubtator-mcp-server --client claude --config "{}"
 ```
 
 ##### Cursor
@@ -38,17 +38,17 @@ npx -y @smithery/cli@latest install @JackKuo666/pubmed-mcp-server --client claud
 Paste in Settings → Cursor Settings → MCP → Add new server:
 - Mac/Linux  
 ```s
-npx -y @smithery/cli@latest run @JackKuo666/pubmed-mcp-server --client cursor --config "{}" 
+npx -y @smithery/cli@latest run @JackKuo666/pubtator-mcp-server --client cursor --config "{}" 
 ```
 
 ##### Windsurf
 ```sh
-npx -y @smithery/cli@latest install @JackKuo666/pubmed-mcp-server --client windsurf --config "{}"
+npx -y @smithery/cli@latest install @JackKuo666/pubtator-mcp-server --client windsurf --config "{}"
 ```
 
 ##### CLine
 ```sh
-npx -y @smithery/cli@latest install @JackKuo666/pubmed-mcp-server --client cline --config "{}"
+npx -y @smithery/cli@latest install @JackKuo666/pubtator-mcp-server --client cline --config "{}"
 ```
 
 #### Manual Installation
