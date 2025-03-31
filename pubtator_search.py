@@ -1,7 +1,6 @@
 import requests
 import json
 import time
-import urllib.parse
 from typing import List, Dict, Optional, Union, Generator
 
 class PubTator3API:
