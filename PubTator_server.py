@@ -1,8 +1,8 @@
-from typing import Any, List, Dict, Optional, Union
+from typing import AsyncGenerator, List, Dict, Optional, Any
 import asyncio
 import logging
 from mcp.server.fastmcp import FastMCP
-from PubTator_search import PubTator3API
+from pubtator_search import PubTator3API
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -13,9 +13,9 @@ mcp = FastMCP("pubtator")
 # Initialize PubTator3API client
 client = PubTator3API(max_retries=3, timeout=30)
 
+
 @mcp.tool()
-async def search_pubtator(query: str, max_pages: Optional[int] = 3) -> List[Dict[str, Any]]:
-    logging.info(f"Searching PubTator with query: {query}, max_pages: {max_pages}")
+async def search_pubtator(query: str, max_pages: Optional[int] = 3) -> AsyncGenerator[Dict[str, Any], None]:
     """
     Search for papers on PubTator using a query string.
 
@@ -23,16 +23,15 @@ async def search_pubtator(query: str, max_pages: Optional[int] = 3) -> List[Dict
         query: Search query string
         max_pages: Maximum number of pages to retrieve (default: 3)
 
-    Returns:
-        List of dictionaries containing paper information
+    Yields:
+        Dictionary containing paper information
     """
     try:
-        results = []
         async for page_result in client.search(query, max_pages=max_pages):
-            results.append(page_result)
-        return results
+            yield page_result
     except Exception as e:
-        return [{"error": f"An error occurred while searching: {str(e)}"}]
+        logging.error(f"An error occurred while searching: {str(e)}")
+        yield {"error": f"An error occurred while searching: {str(e)}"}
 
 @mcp.tool()
 async def export_publications(ids: List[str], id_type: str = "pmid", format: str = "biocjson", full_text: bool = False) -> Union[Dict, str]:
