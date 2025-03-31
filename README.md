@@ -71,7 +71,7 @@ npx -y @smithery/cli@latest install @JackKuo666/pubtator-mcp-server --client cli
 Start the MCP server:
 
 ```bash
-python PubTator_server.py
+python pubtator_server.py
 ```
 
 The server now supports both stdio and TCP transports. By default, it uses TCP transport. You can configure the following environment variables:
@@ -83,7 +83,7 @@ The server now supports both stdio and TCP transports. By default, it uses TCP t
 Example of starting the server with custom settings:
 
 ```bash
-MCP_TRANSPORT=tcp MCP_HOST=127.0.0.1 MCP_PORT=8888 python PubTator_server.py
+MCP_TRANSPORT=tcp MCP_HOST=127.0.0.1 MCP_PORT=8888 python pubtator_server.py
 ```
 
 The server implements lazy initialization and proper error handling. It will gracefully handle shutdown signals (SIGINT and SIGTERM) and log any errors that occur during startup or operation.
@@ -114,7 +114,7 @@ If you encounter any issues starting the server:
 4. If the server fails to start, try running it with increased verbosity:
 
 ```bash
-python -v PubTator_server.py
+python -v pubtator_server.py
 ```
 
 This will provide more detailed logging information to help identify the source of any issues.
@@ -152,7 +152,7 @@ Add to `claude_desktop_config.json`:
     "pubtator": {
       "command": "C:\\Users\\YOUR\\PATH\\miniconda3\\envs\\mcp_server\\python.exe",
       "args": [
-        "D:\\code\\YOUR\\PATH\\PubTator-MCP-Server\\PubTator_server.py"
+        "D:\\code\\YOUR\\PATH\\PubTator-MCP-Server\\pubtator_server.py"
       ],
       "env": {},
       "disabled": false,
@@ -170,7 +170,7 @@ Add to `claude_desktop_config.json`:
       "command": "bash",
       "args": [
         "-c",
-        "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/PubTator_server.py"
+        "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/pubtator_server.py"
       ],
       "env": {
         "MCP_TRANSPORT": "stdio"
@@ -191,7 +191,7 @@ To use TCP transport, modify the configuration as follows:
       "command": "bash",
       "args": [
         "-c",
-        "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/PubTator_server.py"
+        "source /home/YOUR/PATH/mcp-server-pubtator/.venv/bin/activate && python /home/YOUR/PATH/pubtator_server.py"
       ],
       "env": {
         "MCP_TRANSPORT": "tcp",
@@ -209,12 +209,13 @@ To use TCP transport, modify the configuration as follows:
 
 PubTator MCP Server provides the following core features:
 
-### 1. Export Annotations (export_pubtator_annotations)
+### 1. Export Publications (export_publications)
 
 Export PubTator annotation results for specified PMID literature:
 ```python
-result = await export_pubtator_annotations(
-    pmids=["12345678", "87654321"],
+result = await export_publications(
+    ids=["32133824", "34170578"],
+    id_type="pmid",
     format="biocjson",  # Supported: pubtator, biocxml, biocjson
     full_text=False     # Whether to include full text
 )
@@ -227,7 +228,7 @@ Query standard identifiers for biological concepts through free text:
 result = await find_entity_id(
     query="COVID-19",
     concept="disease",  # Optional: gene, disease, chemical, species, mutation
-    limit=10           # Optional: limit number of results
+    limit=5             # Optional: limit number of results
 )
 ```
 
@@ -236,9 +237,10 @@ result = await find_entity_id(
 Find other entities related to a specified entity:
 ```python
 result = await find_related_entities(
-    entity_id="@DISEASE_COVID-19",
+    entity_id="@DISEASE_COVID_19",
     relation_type="treat",    # Optional: treat, cause, interact, etc.
-    target_entity_type="chemical"  # Optional: gene, disease, chemical
+    target_entity_type="chemical",  # Optional: gene, disease, chemical
+    max_results=5       # Optional: limit number of results
 )
 ```
 
@@ -247,9 +249,8 @@ result = await find_related_entities(
 Search the PubTator database:
 ```python
 results = await search_pubtator(
-    query="COVID-19 treatment",
-    max_pages=3,     # Optional: maximum number of pages to retrieve
-    batch_size=100   # Number of results per batch
+    query="COVID-19",
+    max_pages=1     # Optional: maximum number of pages to retrieve
 )
 ```
 
@@ -258,13 +259,15 @@ results = await search_pubtator(
 Search and batch export literature annotations:
 ```python
 results = await batch_export_from_search(
-    query="COVID-19 treatment",
+    query="COVID-19",
     format="biocjson",
-    max_pages=3,
+    max_pages=1,
     full_text=False,
-    batch_size=100
+    batch_size=5
 )
 ```
+
+Note: The actual function calls may vary depending on your implementation. These examples are based on our recent tests and may need to be adjusted to match your exact API.
 
 ## ⚠️ Usage Limitations
 

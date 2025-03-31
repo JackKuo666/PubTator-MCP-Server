@@ -28,11 +28,10 @@ async def search_pubtator(query: str, max_pages: Optional[int] = 3) -> List[Dict
         List of dictionaries containing paper information
     """
     try:
-        results = []
-        async for page_result in client.search(query, max_pages=max_pages):
-            results.append(page_result)
+        results = await asyncio.to_thread(list, client.search(query, max_pages=max_pages))
         return results
     except Exception as e:
+        logging.error(f"An error occurred while searching: {str(e)}")
         return [{"error": f"An error occurred while searching: {str(e)}"}]
 
 @mcp.tool()
@@ -114,11 +113,10 @@ async def batch_export_from_search(query: str, format: str = "biocjson", max_pag
         List of dictionaries or strings containing exported publication data
     """
     try:
-        results = []
-        async for result in client.batch_export_from_search(query, format, max_pages, full_text, batch_size):
-            results.append(result)
+        results = await asyncio.to_thread(list, client.batch_export_from_search(query, format, max_pages, full_text, batch_size))
         return results
     except Exception as e:
+        logging.error(f"An error occurred during batch export: {str(e)}")
         return [{"error": f"An error occurred during batch export: {str(e)}"}]
 
 if __name__ == "__main__":
