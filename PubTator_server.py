@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, List, Dict, Optional, Any
+from typing import AsyncGenerator, List, Dict, Optional, Any, Union
 import asyncio
 import logging
 from mcp.server.fastmcp import FastMCP
