@@ -6,7 +6,6 @@ WORKDIR /app
 
 # Copy requirement and project files
 COPY requirements.txt ./
-COPY pyproject.toml ./
 COPY README.md ./
 COPY pubtator_server.py ./
 COPY pubtator_search.py ./
